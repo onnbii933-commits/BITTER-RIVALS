@@ -1,73 +1,70 @@
 # BITTER-RIVALS
-WARZONE
-<!DOCTYPE html>
+WARZONE<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Bitter Rivals – Ebook</title>
+<meta charset="UTF-8">
+<title>Bitter Rivals – Ebook ($4)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- PayPal SDK with YOUR Client ID -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AZUM4-zdiX8ZTDZZJT9LPrGjJzp_XesZ7H0PDTS9Ggge2XdEszhdPiKV2eWGqWdLI9a8e0Xc2HQzSBMI&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AZUM4-zdiX8ZTDZZJT9LPrGjJzp_XesZ7H0PDTS9Ggge2XdEszhdPiKV2eWGqWdLI9a8e0Xc2HQzSBMI&currency=USD"></script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 40px;
-      text-align: center;
-    }
-    .box {
-      background: #fff;
-      max-width: 420px;
-      margin: auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin-bottom: 15px;
-    }
-  </style>
+<style>
+body {
+    background:#0e0e0e;
+    color:#fff;
+    font-family:Arial;
+    text-align:center;
+    padding:20px;
+}
+.container {
+    max-width:700px;
+    margin:auto;
+}
+.price {
+    font-size:30px;
+    font-weight:bold;
+    color:#00ff9c;
+    margin:15px 0;
+}
+img {
+    width:230px;
+    border-radius:12px;
+    margin-top:20px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
-  <h1>Bitter Rivals</h1>
-  <p><strong>Price:</strong> $4.00</p>
-  <p>Instant PDF download after payment</p>
+<div class="container">
+    <h1>Bitter Rivals – Ebook (PDF)</h1>
+    <div class="price">$4.00 USD</div>
 
-  <input id="email" type="email" placeholder="Your email address" required>
+    <img src="images/cover.jpg" alt="Book Cover">
 
-  <div id="paypal-button-container"></div>
+    <p>Pay once and download instantly.</p>
+
+    <div id="paypal-button-container"></div>
 </div>
 
 <script>
 paypal.Buttons({
-  createOrder: function () {
-    return fetch("/api/create-order")
-      .then(res => res.json())
-      .then(data => data.id);
-  },
-
-  onApprove: function (data) {
-    return fetch("/api/capture-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderID: data.orderID,
-        email: document.getElementById("email").value
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      window.location.href = "success.html?token=" + data.token;
-    });
-  }
-}).render("#paypal-button-container");
+    createOrder: (data, actions) => {
+        return actions.order.create({
+            purchase_units: [{
+                amount: { value: "4.00" }
+            }]
+        });
+    },
+    onApprove: (data, actions) => {
+        return actions.order.capture().then(() => {
+            window.location.href = "download.html";
+        });
+    }
+}).VERCEL('#paypal-button-container');
 </script>
 
 </body>
 </html>
+
+
